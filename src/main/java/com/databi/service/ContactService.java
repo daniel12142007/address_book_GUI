@@ -57,8 +57,9 @@ public class ContactService {
         return new ArrayList<>(contacts.values());
     }
 
-    public void updateContact(Contact contact,
+    public void updateContact(Contact update,
                               String phoneNumber) {
+        Contact contact = new Contact(update.getName(), update.getSurname(), update.getPhone());
         if (!contact.getPhone().equals(phoneNumber)
                 && contacts.get(contact.getPhone()) != null) {
             System.err.println("Phone must unique phone number");
