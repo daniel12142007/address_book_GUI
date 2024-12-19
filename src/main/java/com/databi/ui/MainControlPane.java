@@ -12,30 +12,44 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.util.List;
 
 public class MainControlPane extends GridPane {
     ContactService contactService;
 
-    HBox hBox = new HBox();
-    TableView<Contact> tableView = new TableView();
-
+    VBox vBox = new VBox();
+    TableView<Contact> tableView = new TableView<>();
 
     public MainControlPane() {
 
         Button buttonUpdateTable = new Button("Update table");
+        buttonUpdateTable.setStyle(
+                "-fx-font-size: 16px;" +
+                        "-fx-background-color: linear-gradient(to bottom, #64b5f6, #2196f3);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-padding: 10;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-cursor: hand;"
+        );
 
         contactService =
                 new ContactService("C:\\Users\\User\\IdeaProjects\\address_book_GUI\\contacts.json");
 
+        // Форма для контакта
         ContactForm contactPane = new ContactForm(
                 new Contact(),
                 contactService
         );
-
-        FindContactPane findContactPane = new FindContactPane(
-                contactService
+        contactPane.setStyle(
+                "-fx-border-color: #2196f3;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-padding: 15;" +
+                        "-fx-background-color: #e3f2fd;" +
+                        "-fx-background-radius: 8;"
         );
 
         TableColumn<Contact, String> nameColumn = new TableColumn<>("Name");
@@ -46,15 +60,24 @@ public class MainControlPane extends GridPane {
         surnameColumn.setCellValueFactory(
                 new PropertyValueFactory<>("surname"));
 
-        TableColumn<Contact, String> phoneColumn = new TableColumn<>("phone");
+        TableColumn<Contact, String> phoneColumn = new TableColumn<>("Phone");
         phoneColumn.setCellValueFactory(
                 new PropertyValueFactory<>("phone"));
-
 
         tableView.getColumns().addAll(
                 nameColumn,
                 surnameColumn,
                 phoneColumn);
+
+        tableView.setStyle(
+                "-fx-border-color: #90caf9;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 8;"
+        );
+
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableView.TableViewSelectionModel<Contact> selectionModel =
                 tableView.getSelectionModel();
@@ -72,26 +95,49 @@ public class MainControlPane extends GridPane {
                     @Override
                     public void onChanged(
                             Change<? extends Contact> change) {
-                        contactPane.setContact(selectedItems.getFirst());
+                        if (!selectedItems.isEmpty()) {
+                            contactPane.setContact(selectedItems.get(0));
+                        }
                     }
                 });
 
-        buttonUpdateTable.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            updateTable();
-        });
+        buttonUpdateTable.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> updateTable());
 
-        hBox.getChildren().add(tableView);
-        hBox.getChildren().add(contactPane);
+        vBox.setSpacing(10);
+        vBox.setStyle(
+                "-fx-padding: 15;" +
+                        "-fx-background-color: #f1f8e9;" +
+                        "-fx-border-color: #c8e6c9;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;"
+        );
+        vBox.getChildren().addAll(buttonUpdateTable, tableView);
+
+        // HBox - контейнер для таблицы и формы
+        HBox hBox = new HBox();
+        hBox.setSpacing(15);
+        hBox.setStyle(
+                "-fx-padding: 20;" +
+                        "-fx-background-color: #f9fbe7;" +
+                        "-fx-border-color: #c5e1a5;" +
+                        "-fx-border-width: 3;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;"
+        );
+        hBox.getChildren().addAll(vBox, contactPane);
 
         add(hBox, 0, 0);
-        add(buttonUpdateTable, 1,0);
+
+        setStyle(
+                "-fx-padding: 30;" +
+                        "-fx-background-color: #fefefe;"
+        );
     }
 
     private void updateTable() {
         List<Contact> contactList = contactService.list();
         tableView.getItems().clear();
-        for (Contact contact : contactList) {
-            tableView.getItems().add(contact);
-        }
+        tableView.getItems().addAll(contactList);
     }
 }

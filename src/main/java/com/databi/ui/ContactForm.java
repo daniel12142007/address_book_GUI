@@ -4,22 +4,17 @@ import com.databi.model.Contact;
 import com.databi.service.ContactService;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 public class ContactForm extends GridPane {
 
-    private ContactService contactService;
-    private Contact contact;
-    private TextField nameField = new TextField();
-    private TextField surnameField = new TextField();
-    private TextField phoneField = new TextField();
+    private final TextField nameField = new TextField();
+    private final TextField surnameField = new TextField();
+    private final TextField phoneField = new TextField();
 
     public ContactForm(Contact contact, ContactService contactService) {
-        this.contactService = contactService;
-        this.contact = contact;
         Button saveButton = new Button("Save");
         Button cancelButton = new Button("Cancel");
 
@@ -47,7 +42,7 @@ public class ContactForm extends GridPane {
             Contact oldContact = contactService.searchContact(contact.getPhone());
             if (oldContact != null) {
                 System.out.println("Updating existing contact");
-                contactService.updateContact(oldContact, contact.getPhone());
+                contactService.updateContact(contact, oldContact.getPhone());
             } else {
                 System.out.println("Creating new contact");
                 contactService.createContact(contact);
