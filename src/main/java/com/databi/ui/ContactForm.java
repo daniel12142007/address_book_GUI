@@ -50,7 +50,6 @@ public class ContactForm extends GridPane {
                 contactService.updateContact(oldContact, contact.getPhone());
             } else {
                 System.out.println("Creating new contact");
-                System.err.println("New contact "+contact);
                 contactService.createContact(contact);
             }
             nameField.clear();

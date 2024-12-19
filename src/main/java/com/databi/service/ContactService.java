@@ -9,9 +9,9 @@ import com.databi.repository.FileRepositoryImpl;
 import java.util.*;
 
 public class ContactService {
-    private static FileRepository fileRepository;
-    private static HashMap<String, Contact> contacts;
-    private static Set<String> uniquePhone;
+    private final FileRepository fileRepository;
+    private final HashMap<String, Contact> contacts;
+    private final Set<String> uniquePhone;
 
     public ContactService(String filPath) {
         fileRepository = new FileRepositoryImpl(filPath);
@@ -20,14 +20,15 @@ public class ContactService {
     }
 
     public void createContact(Contact contact) {
+        Contact save = new Contact(contact.getName(), contact.getSurname(), contact.getPhone());
         int oldSizeSet = uniquePhone.size();
-        String phone = contact.getPhone();
+        String phone = save.getPhone();
         uniquePhone.add(phone);
         if (oldSizeSet == uniquePhone.size()) {
             System.err.println("Already contact phone number");
             return;
         }
-        contacts.put(phone, contact);
+        contacts.put(phone, save);
         fileRepository.saveContact(contacts);
     }
 

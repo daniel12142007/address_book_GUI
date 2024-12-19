@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 public class FileRepositoryImpl implements FileRepository {
     private final String PATH_FILE;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final List<Contact> contacts = readFile();
-
     public FileRepositoryImpl(String filePath) {
         this.PATH_FILE = filePath;
     }
